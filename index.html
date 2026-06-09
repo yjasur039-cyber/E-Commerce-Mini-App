@@ -1,117 +1,353 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce Mini App</title>
+    <title>NexPay - Zamonaviy E-Commerce Platforma</title>
     <style>
-        body { 
-            font-family: sans-serif; 
-            background-color: #111424; 
-            color: white; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
+        /* Global o'zgaruvchilar (Kun va Tun rejimi uchun) */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --accent-color: #00e676; /* Alif yashili va Click ko'ki o'rtasidagi zamonaviy neon */
+            --input-bg: rgba(15, 23, 42, 0.6);
+            --shadow: rgba(0, 0, 0, 0.3);
         }
-        .card { 
-            background: #1c2038; 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-            width: 100%; 
-            max-width: 400px; 
+
+        .light {
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-color: #00c853;
+            --input-bg: #ffffff;
+            --shadow: rgba(148, 163, 184, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Glassmorphism Kard - Premium dizayn */
+        .app-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 20px 40px var(--shadow);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Yuqori qism: Emblema, Nom va boshqaruv paneli */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Maxsus dinamik emblema (SVG) */
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #007bff, var(--accent-color));
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 230, 118, 0.3);
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, var(--text-main), var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .light .control-btn {
+            background: rgba(0, 0, 0, 0.03);
+        }
+        .control-btn:hover {
+            transform: translateY(-2px);
+            background: var(--accent-color);
+            color: white;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 25px 0;
+            text-align: center;
+        }
+
+        /* Bo'limlar uslubi: Chap tomonda maxsus emblema bilan */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 2px 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.15);
+        }
+
+        /* Bo'limning chap tomonidagi emblema */
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            fill: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-wrapper:focus-within .section-icon {
+            fill: var(--accent-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 0;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
             box-sizing: border-box;
         }
-        .lang-switcher { 
-            text-align: right; 
-            margin-bottom: 20px; 
-        }
-        .lang-btn { 
-            background: none; 
-            border: none; 
-            color: #888; 
-            cursor: pointer; 
-            font-weight: bold; 
-            margin-left: 10px; 
-            font-size: 14px;
-        }
-        .lang-btn.active { 
-            color: #2481cc; 
-            border-bottom: 2px solid #2481cc;
-        }
-        h2 { 
-            color: white; 
-            text-align: center; 
-            margin-top: 0;
-            margin-bottom: 25px;
-        }
-        .form-group { 
-            margin-bottom: 20px; 
-        }
-        label { 
-            display: block; 
-            margin-bottom: 8px; 
-            color: #ccc; 
-        }
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            background: #2d325a; 
-            border: 1px solid #3d437a; 
-            border-radius: 6px; 
-            color: white; 
-            box-sizing: border-box; 
-            font-size: 15px;
-        }
+
         input::placeholder {
-            color: #777;
+            color: var(--text-muted);
+            opacity: 0.7;
         }
-        button.submit-btn { 
-            width: 100%; 
-            padding: 14px; 
-            background-color: #2481cc; 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 16px; 
-            font-weight: bold;
-            margin-top: 10px;
+
+        select option {
+            background: var(--input-bg);
+            color: #000;
         }
-        button.submit-btn:hover { 
-            background-color: #1a6fa6; 
+
+        /* Premium to'lov tugmasi */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #007bff 0%, var(--accent-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(0, 230, 118, 0.25);
+            transition: transform 0.2s, opacity 0.2s;
+            margin-top: 15px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="lang-switcher">
-        <button class="lang-btn active" onclick="changeLanguage('uz', this)">UZ</button>
-        <button class="lang-btn" onclick="changeLanguage('ru', this)">РУ</button>
-        <button class="lang-btn" onclick="changeLanguage('en', this)">EN</button>
+<div class="app-container">
+    <div class="header">
+        <div class="brand-wrapper">
+            <div class="brand-logo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 22H22L12 2Z" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span class="brand-name">NexPay</span>
+        </div>
+        <div class="controls">
+            <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">🌙</button>
+            <button class="control-btn" id="lang-btn" onclick="rotateLanguage()">UZ</button>
+        </div>
     </div>
 
     <h2 id="page-title">Buyurtma Rasmiylashtirish</h2>
     
     <div class="form-group">
-        <label id="label-name" for="name">Ismingiz:</label>
-        <input type="text" id="name" placeholder="Ismingizni kiriting">
+        <div class="input-wrapper">
+            <div class="section-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <input type="text" id="name" placeholder="Ismingizni kiriting">
+        </div>
     </div>
     
     <div class="form-group">
-        <label id="label-product" for="product">Mahsulotni tanlang:</label>
-        <select id="product">
-            <option value="Kurslar to'plami - 100 000 so'm">Dasturlash kursi - 100 000 so'm</option>
-            <option value="Kitoblar to'plami - 50 000 so'm">Kitoblar to'plami - 50 000 so'm</option>
-        </select>
+        <div class="input-wrapper">
+            <div class="section-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+            <select id="product">
+                <option value="Premium Kurs - 100 000 so'm">Dasturlash kursi - 100 000 so'm</option>
+                <option value="Kitoblar To'plami - 50 000 so'm">Kitoblar to'plami - 50 000 so'm</option>
+            </select>
+        </div>
     </div>
     
-    <button class="submit-btn" id="btn-submit" onclick="sendOrder()">Buyurtma berish</button>
+    <button class="submit-btn" id="btn-submit" onclick="processOrder()">Buyurtma berish</button>
 </div>
 
-<script src="app.js"></script>
+<script>
+    // Tillarga oid ma'lumotlar to'plami (Localization)
+    const translations = {
+        uz: {
+            title: "Buyurtma Rasmiylashtirish",
+            placeholderName: "Ismingizni kiriting",
+            prod1: "Dasturlash kursi - 100 000 so'm",
+            prod2: "Kitoblar to'plami - 50 000 so'm",
+            btnText: "Buyurtma berish",
+            alertEmpty: "Iltimos, ismingizni kiriting!",
+            alertSuccess: "Buyurtma muvaffaqiyatli yuborildi!"
+        },
+        ru: {
+            title: "Оформление заказа",
+            placeholderName: "Введите ваше имя",
+            prod1: "Курс программирования - 100 000 сум",
+            prod2: "Набор книг - 50 000 сум",
+            btnText: "Оформить заказ",
+            alertEmpty: "Пожалуйста, введите ваше имя!",
+            alertSuccess: "Заказ успешно отправлен!"
+        },
+        en: {
+            title: "Checkout Order",
+            placeholderName: "Enter your name",
+            prod1: "Programming Course - 100 000 soum",
+            prod2: "Book Set - 50 000 soum",
+            btnText: "Place Order",
+            alertEmpty: "Please enter your name!",
+            alertSuccess: "Order sent successfully!"
+        }
+    };
+
+    let currentLang = 'uz';
+    const langSequence = ['uz', 'ru', 'en'];
+
+    // 1. Ketma-ket til almashtirish mexanizmi
+    function rotateLanguage() {
+        let currentIndex = langSequence.indexOf(currentLang);
+        let nextIndex = (currentIndex + 1) % langSequence.length;
+        currentLang = langSequence[nextIndex];
+        
+        document.getElementById('lang-btn').innerText = currentLang.toUpperCase();
+        
+        // Elementlarni tarjima qilish
+        document.getElementById('page-title').innerText = translations[currentLang].title;
+        document.getElementById('name').placeholder = translations[currentLang].placeholderName;
+        document.getElementById('btn-submit').innerText = translations[currentLang].btnText;
+        
+        const select = document.getElementById('product');
+        select.options[0].text = translations[currentLang].prod1;
+        select.options[1].text = translations[currentLang].prod2;
+    }
+
+    // 2. Kun / Tun rejimini boshqarish (Dark-Light Mode)
+    function toggleTheme() {
+        const html = document.documentElement;
+        const themeBtn = document.getElementById('theme-toggle');
+        
+        if (html.classList.contains('light')) {
+            html.classList.remove('light');
+            themeBtn.innerText = "☀️";
+        } else {
+            html.classList.add('light');
+            themeBtn.innerText = "🌙";
+        }
+    }
+
+    // 3. Telegram bot xavfsiz integratsiyasi
+    function processOrder() {
+        const token = "8565651705:AAGcPkBIRk7mGd8OQgNzg-sOcZP2RMyIUfY";
+        const chatId = "6198817749";
+
+        const userName = document.getElementById("name").value;
+        const selectedProduct = document.getElementById("product").value;
+
+        if (!userName.trim()) {
+            alert(translations[currentLang].alertEmpty);
+            return;
+        }
+
+        const message = `🚀 NexPay - Yangi Xavfsiz Buyurtma!\n\n👤 Foydalanuvchi: ${userName}\n📦 Tanlangan xizmat: ${selectedProduct}\n🌐 Interfeys tili: ${currentLang.toUpperCase()}\n📅 Tizim vaqti: ${new Date().toLocaleString()}`;
+        const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chatId, text: message })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert(translations[currentLang].alertSuccess);
+                document.getElementById("name").value = "";
+            } else {
+                console.error("API Error");
+            }
+        })
+        .catch(error => console.error("Network Error:", error));
+    }
+</script>
 </body>
 </html>
