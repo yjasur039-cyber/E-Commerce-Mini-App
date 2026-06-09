@@ -117,7 +117,6 @@
 <body>
 
 <div class="app-container">
-    <!-- Logotip va Brend nomi -->
     <div class="header">
         <div class="brand-logo">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -127,32 +126,34 @@
         <span class="brand-name">NexPay</span>
     </div>
 
-    <!-- 1-BOSQICH: Mahsulot va Xizmat turi -->
     <div id="step-1" class="form-step active">
-        <h3>1-Bosqich: kartangzni kiriting</h3>
+        <h3>1-Bosqich: Kartangizni kiriting</h3>
         <div class="form-group">
-       
-           <input type="number" id="amount-input" placeholder="0" oninput="validateAndCalculate()">
+            <label for="card-input">Karta raqami:</label>
+            <input type="number" id="card-input" placeholder="8600 ...." oninput="this.value = this.value.slice(0, 16)">
         </div>
         <button class="submit-btn" onclick="navigateToStep(2)">Keyingisi (Next)</button>
     </div>
 
-    <!-- 2-BOSQICH: Summani va Komissiyani hisoblash -->
     <div id="step-2" class="form-step">
         <h3>2-Bosqich: Miqdorni belgilash</h3>
+        
+        <div class="form-group">
+            <label>Pul o'tkaziladigan karta:</label>
+            <input type="number" id="step2-card-display" placeholder="Karta raqami" disabled style="opacity: 0.6;">
+        </div>
+
         <div class="form-group">
             <label for="amount-input">Ilova ichki balansi summasi (so'm):</label>
-            <p>pul o'tkazmoqchi bo'lgan karta raqamini kiriting</p>
             <input type="number" id="amount-input" placeholder="0" oninput="validateAndCalculate()">
         </div>
 
-        <!-- Dinamik hisob-kitob va ogohlantirishlar -->
         <div class="info-row">
             <span>Komissiya yig'imi (1%):</span>
             <strong id="commission-text">0 so'm</strong>
         </div>
         <div class="info-row">
-            <span>Jami hisob:</span>
+            <span>Jami hisob (Balansga tushadigan summa):</span>
             <strong id="total-text">0 so'm</strong>
         </div>
 
@@ -168,6 +169,16 @@
 <script>
     // Bosqichlar orasida harakat qilish funksiyasi
     function navigateToStep(stepNumber) {
+        // 2-bosqichga o'tayotganda 1-bosqichda kiritilgan kartani 2-bosqichdagi inputga nusxalash
+        if(stepNumber === 2) {
+            const cardNum = document.getElementById("card-input").value;
+            if(cardNum.trim() === "") {
+                alert("Iltimos, avval karta raqamini kiriting!");
+                return;
+            }
+            document.getElementById("step2-card-display").value = cardNum;
+        }
+
         // Barcha bosqichlarni yashirish
         document.querySelectorAll('.form-step').forEach(step => {
             step.classList.remove('active');
@@ -177,7 +188,7 @@
         document.getElementById(`step-${stepNumber}`).classList.add('active');
     }
 
-    // Raqamlarni tekshirish va 1% komissiyani hisoblash
+    // Raqamlarni tekshirish va 1% komissiyani ayirib hisoblash
     function validateAndCalculate() {
         const amountInput = document.getElementById("amount-input").value;
         const amount = parseFloat(amountInput);
@@ -203,9 +214,9 @@
             warningBox.style.display = "none";
         }
 
-        // 1% komissiya va jami summani hisoblash
+        // 1% komissiya va jami summani (x - 1%) hisoblash
         const commission = amount * 0.01;
-        const total = amount + commission;
+        const total = amount - commission; // Kiritilgan summadan komissiya ayirilyapti
 
         // Natijalarni chiroyli formatda ekranga chiqarish
         commissionText.innerText = commission.toLocaleString() + " so'm";
