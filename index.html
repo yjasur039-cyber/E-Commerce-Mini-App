@@ -3,36 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onlayn Do'kon - Praktika</title>
+    <title>Multi-Language Project</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; align-content: center; padding: 50px; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { color: #333; text-align: center; }
+        body { font-family: sans-serif; background-color: #111424; color: white; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 400px; background: #1c2038; padding: 20px; border-radius: 12px; }
+        .lang-switcher { text-align: right; margin-bottom: 20px; }
+        .lang-btn { background: none; border: none; color: #888; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        .lang-btn.active { color: #007bff; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: #555; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #2481cc; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #1a6fa6; }
+        label { display: block; margin-bottom: 5px; color: #ccc; }
+        input { width: 100%; padding: 10px; background: #2d325a; border: 1px solid #3d437a; border-radius: 6px; color: white; box-sizing: border-box; }
+        button.submit-btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Buyurtma Rasmiylashtirish</h2>
-    <div class="form-group">
-        <label for="name">Ismingiz:</label>
-        <input type="text" id="name" placeholder="Ismingizni kiriting">
+<div class="container">
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="changeLanguage('uz', this)">UZ</button>
+        <button class="lang-btn" onclick="changeLanguage('ru', this)">РУ</button>
+        <button class="lang-btn" onclick="changeLanguage('en', this)">EN</button>
     </div>
+
+    <h3 id="title">Tizimga kirish</h3>
+    
     <div class="form-group">
-        <label for="product">Mahsulotni tanlang:</label>
-        <select id="product">
-            <option value="Kurslar to'plami - 100 000 so'm">Dasturlash kursi - 100 000 so'm</option>
-            <option value="Kitoblar to'plami - 50 000 so'm">Kitoblar to'plami - 50 000 so'm</option>
-        </select>
+        <label id="label-name" for="username">Foydalanuvchi ismi:</label>
+        <input type="text" id="username" placeholder="Ismingizni kiriting">
     </div>
-    <button onclick="sendOrder()">Buyurtma berish</button>
+
+    <button class="submit-btn" id="btn-text">Davom etish</button>
 </div>
 
-<script src="app.js"></script>
+<script src="lang.js"></script>
 </body>
 </html>
