@@ -129,14 +129,10 @@
 
     <!-- 1-BOSQICH: Mahsulot va Xizmat turi -->
     <div id="step-1" class="form-step active">
-        <h3>1-Bosqich: Loyihani tanlash</h3>
+        <h3>1-Bosqich: kartangzni kiriting</h3>
         <div class="form-group">
-            <label for="service-select">Xizmat turi yoki kurs:</label>
-            <select id="service-select">
-                <option value="Dasturlash kursi">Dasturlash kursi - 100 000 so'm</option>
-                <option value="Grafik dizayn kursi">Grafik dizayn kursi - 90 000 so'm</option>
-                <option value="Marketing qo'llanmasi">Marketing qo'llanmasi - 50 000 so'm</option>
-            </select>
+       
+           <input type="number" id="amount-input" placeholder="0" oninput="validateAndCalculate()">
         </div>
         <button class="submit-btn" onclick="navigateToStep(2)">Keyingisi (Next)</button>
     </div>
@@ -146,6 +142,7 @@
         <h3>2-Bosqich: Miqdorni belgilash</h3>
         <div class="form-group">
             <label for="amount-input">Ilova ichki balansi summasi (so'm):</label>
+            <p>pul o'tkazmoqchi bo'lgan karta raqamini kiriting</p>
             <input type="number" id="amount-input" placeholder="0" oninput="validateAndCalculate()">
         </div>
 
