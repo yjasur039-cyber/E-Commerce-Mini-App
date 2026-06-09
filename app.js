@@ -1,5 +1,5 @@
 function sendOrder() {
-    // Siz taqdim etgan bot ma'lumotlari (Xavfsiz ma'lumotlar uchun foydalaniladi)
+    // Siz taqdim etgan Telegram bot va Chat ID ma'lumotlari joylashtirildi
     const token = "8565651705:AAGcPkBIRk7mGd8OQgNzg-sOcZP2RMyIUfY";
     const chatId = "6198817749";
 
@@ -11,7 +11,7 @@ function sendOrder() {
         return;
     }
 
-    // Telegram botga yuboriladigan matn formati
+    // Telegram botga yuboriladigan xavfsiz xabar formati
     const message = `🛍 Yangi Buyurtma!\n\n👤 Mijoz: ${userName}\n📦 Mahsulot: ${selectedProduct}\n📅 Vaqt: ${new Date().toLocaleString()}`;
 
     // Telegram API url manzili
@@ -23,7 +23,7 @@ function sendOrder() {
         text: message
     };
 
-    // Fetch orqali API ga so'rov jo'natish
+    // Fetch orqali Telegram API ga so'rov jo'natish
     fetch(url, {
         method: "POST",
         headers: {
@@ -33,9 +33,9 @@ function sendOrder() {
     })
     .then(response => {
         if (response.ok) {
-            alert("Buyurtmangiz muvaffaqiyatli qabul qilindi va botga yuborildi!");
+            alert("Buyurtmangiz muvaffaqiyatli qabul qilindi va botingizga yuborildi!");
         } else {
-            alert("Xatolik yuz berdi. Bot token yoki Chat ID xato bo'lishi mumkin.");
+            alert("Xatolik yuz berdi. Bot hali faollashtirilmagan bo'lishi mumkin.");
         }
     })
     .catch(error => {
