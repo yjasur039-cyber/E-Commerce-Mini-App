@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCalc - Dinamik Hisoblagich</title>
+    <title>NexPay - Dinamik Buyurtma Oqimi</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: #0f172a;
             color: #ffffff;
             display: flex;
@@ -15,21 +15,49 @@
             height: 100vh;
             margin: 0;
         }
-        .calc-card {
+        .app-container {
             background-color: #1e293b;
             border: 1px solid #334155;
             padding: 30px;
-            border-radius: 16px;
+            border-radius: 24px;
             width: 100%;
-            max-width: 380px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-sizing: border-box;
         }
-        h2 {
-            text-align: center;
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #007bff, #00e676);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        h3 {
+            font-size: 20px;
             margin-top: 0;
-            color: #38bdf8;
+            margin-bottom: 20px;
+            color: #f1f5f9;
         }
-        .input-group {
+        .form-step {
+            display: none; /* Bosqichlar boshida yashirin bo'ladi */
+        }
+        .form-step.active {
+            display: block; /* Faqat aktiv bosqich ko'rinadi */
+        }
+        .form-group {
             margin-bottom: 20px;
         }
         label {
@@ -38,101 +66,166 @@
             color: #94a3b8;
             font-size: 14px;
         }
-        input {
+        input, select {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: #0f172a;
             border: 1px solid #475569;
-            border-radius: 8px;
+            border-radius: 12px;
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             box-sizing: border-box;
             outline: none;
         }
-        input:focus {
-            border-color: #38bdf8;
+        input:focus, select:focus {
+            border-color: #00e676;
         }
-        .result-section {
-            background-color: #0f172a;
+        .submit-btn {
+            width: 100%;
             padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            border: 1px solid #334155;
+            background: linear-gradient(135deg, #007bff, #00e676);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 10px;
         }
-        .result-row {
+        .warning-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #f87171;
+            display: none;
+        }
+        .info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            color: #94a3b8;
         }
-        .result-row:last-child {
-            margin-bottom: 0;
-            padding-top: 10px;
-            border-top: 1px dashed #334155;
-            font-weight: bold;
-            color: #34d399;
+        .info-row strong {
+            color: #00e676;
         }
     </style>
 </head>
 <body>
 
-<div class="calc-card">
-    <h2>NexCalc</h2>
-    
-    <div class="input-group">
-        <label for="amount">Kiritilayotgan qiymat (Uzs):</label>
-        <input type="number" id="amount" placeholder="0.00" oninput="calculateValues()">
+<div class="app-container">
+    <!-- Logotip va Brend nomi -->
+    <div class="header">
+        <div class="brand-logo">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 22H22L12 2Z" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <span class="brand-name">NexPay</span>
     </div>
 
-    <div class="result-section">
-        <div class="result-row">
-            <span>Kiritilgan xizmat:</span>
-            <span id="out-amount">0 so'm</span>
+    <!-- 1-BOSQICH: Mahsulot va Xizmat turi -->
+    <div id="step-1" class="form-step active">
+        <h3>1-Bosqich: Loyihani tanlash</h3>
+        <div class="form-group">
+            <label for="service-select">Xizmat turi yoki kurs:</label>
+            <select id="service-select">
+                <option value="Dasturlash kursi">Dasturlash kursi - 100 000 so'm</option>
+                <option value="Grafik dizayn kursi">Grafik dizayn kursi - 90 000 so'm</option>
+                <option value="Marketing qo'llanmasi">Marketing qo'llanmasi - 50 000 so'm</option>
+            </select>
         </div>
-        <div class="result-row">
-            <span>Fiksirlangan yig'im (Komissiya):</span>
-            <span id="out-commission">0 so'm</span>
+        <button class="submit-btn" onclick="navigateToStep(2)">Keyingisi (Next)</button>
+    </div>
+
+    <!-- 2-BOSQICH: Summani va Komissiyani hisoblash -->
+    <div id="step-2" class="form-step">
+        <h3>2-Bosqich: Miqdorni belgilash</h3>
+        <div class="form-group">
+            <label for="amount-input">Ilova ichki balansi summasi (so'm):</label>
+            <input type="number" id="amount-input" placeholder="0" oninput="validateAndCalculate()">
         </div>
-        <div class="result-row">
+
+        <!-- Dinamik hisob-kitob va ogohlantirishlar -->
+        <div class="info-row">
+            <span>Komissiya yig'imi (1%):</span>
+            <strong id="commission-text">0 so'm</strong>
+        </div>
+        <div class="info-row">
             <span>Jami hisob:</span>
-            <span id="out-total">0 so'm</span>
+            <strong id="total-text">0 so'm</strong>
         </div>
+
+        <div id="warning-message" class="warning-box">
+            Ogohlantirish: Summa minimum 5,000 so'm va maximum 5,000,000 so'm oralig'ida bo'lishi kerak!
+        </div>
+
+        <button class="submit-btn" style="background: #475569; margin-bottom: 8px;" onclick="navigateToStep(1)">Orqaga</button>
+        <button class="submit-btn" onclick="submitFinalOrder()">Yakunlash</button>
     </div>
 </div>
 
 <script>
-    // Dinamik hisob-kitob funksiyasi
-    function calculateValues() {
-        // Input ichidagi qiymatni olish
-        const inputField = document.getElementById("amount");
-        const rawValue = inputField.value;
+    // Bosqichlar orasida harakat qilish funksiyasi
+    function navigateToStep(stepNumber) {
+        // Barcha bosqichlarni yashirish
+        document.querySelectorAll('.form-step').forEach(step => {
+            step.classList.remove('active');
+        });
         
-        // Matnni songa o'tkazish
-        const amount = parseFloat(rawValue);
+        // Tanlangan bosqichni ko'rsatish
+        document.getElementById(`step-${stepNumber}`).classList.add('active');
+    }
+
+    // Raqamlarni tekshirish va 1% komissiyani hisoblash
+    function validateAndCalculate() {
+        const amountInput = document.getElementById("amount-input").value;
+        const amount = parseFloat(amountInput);
         
-        // Fiksirlangan komissiya miqdori (100 so'm)
-        const fixedCommission = 100;
+        const warningBox = document.getElementById("warning-message");
+        const commissionText = document.getElementById("commission-text");
+        const totalText = document.getElementById("total-text");
 
-        // Ekranga chiqaruvchi elementlarni olish
-        const outAmount = document.getElementById("out-amount");
-        const outCommission = document.getElementById("out-commission");
-        const outTotal = document.getElementById("out-total");
-
-        // Input bo'sh yoki noto'g'ri qiymat bo'lsa, nolga tenglash
         if (isNaN(amount) || amount <= 0) {
-            outAmount.innerText = "0 so'm";
-            outCommission.innerText = "0 so'm";
-            outTotal.innerText = "0 so'm";
+            commissionText.innerText = "0 so'm";
+            totalText.innerText = "0 so'm";
+            warningBox.style.display = "none";
             return;
         }
 
-        // Matematik amal (Summa + Komissiya)
-        const totalSum = amount + fixedCommission;
+        // Chegaralarni tekshirish (5,000 va 5,000,000)
+        if (amount < 5000 || amount > 5000000) {
+            warningBox.style.display = "block";
+            commissionText.innerText = "0 so'm";
+            totalText.innerText = "0 so'm";
+            return;
+        } else {
+            warningBox.style.display = "none";
+        }
 
-        // Natijalarni real vaqtda formatlab ekranga chiqarish
-        outAmount.innerText = amount.toLocaleString() + " so'm";
-        outCommission.innerText = fixedCommission + " so'm";
-        outTotal.innerText = totalSum.toLocaleString() + " so'm";
+        // 1% komissiya va jami summani hisoblash
+        const commission = amount * 0.01;
+        const total = amount + commission;
+
+        // Natijalarni chiroyli formatda ekranga chiqarish
+        commissionText.innerText = commission.toLocaleString() + " so'm";
+        totalText.innerText = total.toLocaleString() + " so'm";
+    }
+
+    // Yakuniy tasdiqlash
+    function submitFinalOrder() {
+        const amountInput = document.getElementById("amount-input").value;
+        const amount = parseFloat(amountInput);
+
+        if (isNaN(amount) || amount < 5000 || amount > 5000000) {
+            alert("Iltimos, belgilangan shartlarga muvofiq to'g'ri summa kiriting!");
+            return;
+        }
+
+        alert("Buyurtma jarayoni muvaffaqiyatli simulyatsiya qilindi!");
     }
 </script>
 
