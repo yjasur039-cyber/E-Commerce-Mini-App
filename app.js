@@ -41,4 +41,19 @@ function sendOrder() {
     .catch(error => {
         console.error("Xatolik:", error);
     });
+}// Standart va xavfsiz ma'lumotlarni tekshirish funksiyasi
+function validateInput(name, quantity) {
+    // Ism maydonini tekshirish
+    if (name.trim().length < 3) {
+        console.log("Xatolik: Ism juda qisqa");
+        return false;
+    }
+    
+    // Miqdorni tekshirish
+    if (quantity <= 0 || isNaN(quantity)) {
+        console.log("Xatolik: Noto'g'ri miqdor kiritildi");
+        return false;
+    }
+    
+    return true;
 }
