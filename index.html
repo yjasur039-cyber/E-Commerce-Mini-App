@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onlayn Do'kon - Praktika</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; align-content: center; padding: 50px; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { color: #333; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #555; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #2481cc; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #1a6fa6; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Buyurtma Rasmiylashtirish</h2>
+    <div class="form-group">
+        <label for="name">Ismingiz:</label>
+        <input type="text" id="name" placeholder="Ismingizni kiriting">
+    </div>
+    <div class="form-group">
+        <label for="product">Mahsulotni tanlang:</label>
+        <select id="product">
+            <option value="Kurslar to'plami - 100 000 so'm">Dasturlash kursi - 100 000 so'm</option>
+            <option value="Kitoblar to'plami - 50 000 so'm">Kitoblar to'plami - 50 000 so'm</option>
+        </select>
+    </div>
+    <button onclick="sendOrder()">Buyurtma berish</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
